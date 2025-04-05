@@ -1,0 +1,105 @@
+Producto
+CREATE TABLE "Destino_STjardineria_Producto" (
+    "Id_Categoria" int,
+    "Desc_Categoria" nvarchar(50),
+    "descripcion_texto" nvarchar(max),
+    "descripcion_html" nvarchar(max),
+    "imagen" nvarchar(256)
+)
+categoria_productos
+
+CREATE TABLE "Destino de ADO NET" (
+    "Id_Categoria" int,
+    "descripcion_texto" nvarchar(max),
+    "Desc_Categoria" nvarchar(50)
+)
+CREATE TABLE "Destino_STpedido" (
+    "ID_pedido" int,
+    "fecha_pedido" date,
+    "fecha_esperada" date,
+    "fecha_entrega" date,
+    "estado" nvarchar(15),
+    "comentarios" nvarchar(max),
+    "ID_cliente" int
+)
+Detalle pedido
+
+CREATE TABLE "Destino_STdetalle_Pedido" (
+    "ID_detalle_pedido" int,
+    "ID_pedido" int,
+    "ID_producto" int,
+    "cantidad" int,
+    "precio_unidad" numeric(15,2),
+    "numero_linea" smallint
+)
+CREATE TABLE "Destino_STcliente" (
+    "ID_cliente" int,
+    "nombre_cliente" nvarchar(50),
+    "nombre_contacto" nvarchar(30),
+    "apellido_contacto" nvarchar(30),
+    "telefono" nvarchar(15),
+    "fax" nvarchar(15),
+    "linea_direccion1" nvarchar(50),
+    "linea_direccion2" nvarchar(50),
+    "ciudad" nvarchar(50),
+    "region" nvarchar(50),
+    "pais" nvarchar(50),
+    "codigo_postal" nvarchar(10),
+    "ID_empleado_rep_ventas" int,
+    "limite_credito" numeric(15,2)
+)
+Empleados
+
+CREATE TABLE "Destino_STempleados" (
+    "ID_empleado" int,
+    "nombre" nvarchar(50),
+    "apellido1" nvarchar(50),
+    "apellido2" nvarchar(50),
+    "extension" nvarchar(10),
+    "email" nvarchar(100),
+    "ID_oficina" int,
+    "ID_jefe" int,
+    "puesto" nvarchar(50)
+)
+Oficinas
+
+CREATE TABLE "Destino_SToficinas" (
+    "ID_oficina" int,
+    "Descripcion" nvarchar(10),
+    "ciudad" nvarchar(30),
+    "pais" nvarchar(50),
+    "region" nvarchar(50),
+    "codigo_postal" nvarchar(10),
+    "telefono" nvarchar(20),
+    "linea_direccion1" nvarchar(50),
+    "linea_direccion2" nvarchar(50)
+)
+Pago
+
+CREATE TABLE "Destino_STPago" (
+    "ID_pago" int,
+    "ID_cliente" int,
+    "forma_pago" nvarchar(40),
+    "id_transaccion" nvarchar(50),
+    "fecha_pago" date,
+    "total" numeric(15,2)
+)
+Lugar
+
+CREATE TABLE "Destino_STlugar" (
+    "ID_oficina" int,
+    "ciudad" nvarchar(30),
+    "pais" nvarchar(50),
+    "region" nvarchar(50),
+    "codigo_postal" nvarchar(10)
+)
+Tiempo
+
+CREATE TABLE "Destino_STjardineria_Tiempo" (
+    "fecha_pedido" date,
+    "fecha_esperada" date,
+    "fecha_entrega" date
+)
+
+
+
