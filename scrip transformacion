@@ -1,0 +1,73 @@
+CREATE TABLE "Destino_DM_Cliente" (
+    "ID_Venta" int primary key,
+    "ID_pedido" int,
+    "ID_cliente" int,
+    "ID_producto" int,
+    "Id_tiempo" int,
+    "ID_empleado" int,
+    "ID_oficina" int,
+    "cantidad" int,
+    "precio_unidad" numeric(10,2),
+    "estado" nvarchar(50),
+    "Forma_Pago" nvarchar(50),
+    "Total" numeric(10,2)
+)
+CREATE TABLE "Fac_Final" (
+    "ID_Venta" int,
+    "ID_pedido" int,
+    "ID_cliente" int,
+    "ID_producto" int,
+    "Id_tiempo" int,
+    "ID_empleado" int,
+    "ID_oficina" int,
+    "cantidad" int,
+    "precio_unidad" numeric(10,2),
+    "estado" nvarchar(50),
+    "Forma_Pago" nvarchar(50),
+    "Total" numeric(10,2)
+)
+CREATE TABLE "Dim_Pedido" (
+    "ID_pedido" int,
+    "fecha_pedido" date,
+    "fecha_esperada" date,
+    "fecha_entrega" date,
+    "estado" nvarchar(15),
+    "cantidad" int,
+    "precio_unidad" numeric(15,2),
+    "comentarios" nvarchar(max),
+    "ID_producto" int,
+    "ID_cliente" int,
+    "ID_detalle_pedido" int
+)
+  CREATE TABLE "Dim_Producto" (
+    "ID_producto" int,
+    "CodigoProducto" nvarchar(15),
+    "nombre" nvarchar(70),
+    "Categoria" int,
+    "descripcion_texto" nvarchar(max),
+    "cantidad_en_stock" smallint,
+    "precio_venta" numeric(15,2),
+    "precio_proveedor" numeric(15,2),
+    "proveedor" nvarchar(50),
+    "descripcion" nvarchar(max),
+    "Id_Categoria_Dim" int
+)
+CREATE TABLE "Dim_Empleados" (
+    "ID_empleado" int,
+    "nombre" nvarchar(50),
+    "apellido1" nvarchar(50),
+    "apellido2" nvarchar(50),
+    "extension" nvarchar(10),
+    "email" nvarchar(100),
+    "ID_oficina" int,
+    "ID_jefe" int,
+    "puesto" nvarchar(50),
+    "ciudad" nvarchar(30),
+    "pais" nvarchar(50),
+    "region" nvarchar(50),
+    "codigo_postal" nvarchar(10),
+    "telefono" nvarchar(20),
+    "linea_direccion1" nvarchar(50),
+    "linea_direccion2" nvarchar(50),
+    "ID_oficina_Dim" int
+)
