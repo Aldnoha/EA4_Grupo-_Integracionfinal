@@ -1,0 +1,128 @@
+
+USE StagingDB_jardineria;
+GO
+
+
+IF OBJECT_ID('dbo.Fact_Ventas', 'U') IS NOT NULL
+    DROP TABLE dbo.Fact_Ventas;
+GO
+
+CREATE TABLE dbo.Fact_Ventas (
+    ID_Venta INT IDENTITY(1,1) PRIMARY KEY,
+    ID_pedido INT NOT NULL,
+    ID_cliente INT NOT NULL,
+    ID_producto INT NOT NULL,
+    Id_tiempo INT NOT NULL,
+    ID_empleado INT NOT NULL,
+    ID_oficina INT NOT NULL,
+    cantidad INT NOT NULL,
+    precio_unidad DECIMAL(10, 2) NOT NULL,
+    estado VARCHAR(50) NOT NULL,
+    Forma_Pago VARCHAR(50) NOT NULL,
+    Total DECIMAL(10, 2) NOT NULL
+);
+GO
+
+
+INSERT INTO dbo.Fact_Ventas (
+    ID_pedido,
+    ID_cliente,
+    ID_producto,
+    Id_tiempo,
+    ID_empleado,
+    ID_oficina,
+    cantidad,
+    precio_unidad,
+    estado,
+    Forma_Pago,
+    Total
+)
+SELECT
+    ped.ID_pedido,
+    ped.ID_cliente,
+    ped.ID_producto,
+    t.Id_tiempo,
+    cli.ID_empleado_rep_ventas AS ID_empleado,
+    emp.ID_oficina,
+    prod.cantidad_en_stock AS cantidad,
+    ped.precio_unidad,
+    ped.estado,
+    CASE 
+        WHEN ped.ID_cliente % 3 = 0 THEN 'Tarjeta de Crédito'
+        WHEN ped.ID_cliente % 3 = 1 THEN 'Efectivo'
+        ELSE 'Transferencia Bancaria'
+    END as Forma_Pago,
+    (prod.cantidad_en_stock * ped.precio_unidad) as Total
+FROM 
+    [dbo].[Dim_Pedido] ped
+    INNER JOIN [dbo].[Dim_Cliente] cli ON ped.ID_cliente = cli.ID_cliente
+    INNER JOIN [dbo].[Dim_Tiempo] t ON ped.fecha_pedido = t.fecha_pedido
+    INNER JOIN [dbo].[Dim_Empleados] emp ON cli.ID_empleado_rep_ventas = emp.ID_empleado
+    INNER JOIN [dbo].[Dim_Producto] prod ON ped.ID_producto = prod.ID_producto;
+GO
+
+
+SELECT TOP 100 * FROM dbo.Fact_Ventas;
+GO
+
+
+SELECT 
+    cli.nombre_cliente AS NombreCliente,
+    COUNT(fv.ID_pedido) AS TotalPedidos,
+    SUM(fv.Total) AS MontoTotal,
+    fv.Forma_Pago
+FROM 
+    dbo.Fact_Ventas fv
+    INNER JOIN [dbo].[Dim_Cliente] cli ON fv.ID_cliente = cli.ID_cliente
+GROUP BY 
+    cli.nombre_cliente, fv.Forma_Pago
+ORDER BY 
+    MontoTotal DESC;
+GO
+
+
+SELECT 
+    prod.nombre AS NombreProducto,
+    prod.Categoria,
+    SUM(fv.cantidad) AS CantidadTotal,
+    SUM(fv.Total) AS MontoTotal,
+    fv.estado
+FROM 
+    dbo.Fact_Ventas fv
+    INNER JOIN [dbo].[Dim_Producto] prod ON fv.ID_producto = prod.ID_producto
+GROUP BY 
+    prod.nombre, prod.Categoria, fv.estado
+ORDER BY 
+    MontoTotal DESC;
+GO
+
+
+SELECT 
+    emp.nombre + ' ' + emp.apellido1 AS NombreEmpleado,
+    emp.puesto,
+    COUNT(fv.ID_pedido) AS TotalPedidos,
+    SUM(fv.cantidad) AS UnidadesVendidas,
+    SUM(fv.Total) AS MontoTotal
+FROM 
+    dbo.Fact_Ventas fv
+    INNER JOIN [dbo].[Dim_Empleados] emp ON fv.ID_empleado = emp.ID_empleado
+GROUP BY 
+    emp.nombre, emp.apellido1, emp.puesto
+ORDER BY 
+    MontoTotal DESC;
+GO
+
+
+SELECT 
+    t.Mes,
+    t.Año,
+    COUNT(fv.ID_pedido) AS TotalPedidos,
+    SUM(fv.Total) AS MontoTotal
+FROM 
+    dbo.Fact_Ventas fv
+    INNER JOIN [dbo].[Dim_Tiempo] t ON fv.Id_tiempo = t.Id_tiempo
+GROUP BY 
+    t.Mes, t.Año
+ORDER BY 
+    t.Año, t.Mes;
+GO
